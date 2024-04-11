@@ -6,10 +6,31 @@
 
 <HBox alignment="CENTER" prefHeight="720" prefWidth="1280" style="-fx-spacing: 20;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.evgen.MainController">
    <children>
-      <VBox alignment="CENTER" prefHeight="720.0" prefWidth="210.0">
+      <VBox alignment="CENTER" prefHeight="720.0" prefWidth="210.0" style="-fx-spacing: 20;">
          <children>
-            <Button fx:id="createShip" mnemonicParsing="false" text="createShip" />
-            <Label fx:id="countShips" alignment="CENTER" contentDisplay="CENTER" prefHeight="160.0" prefWidth="105.0" text="Ships: " />
+            <Label fx:id="info" alignment="CENTER" contentDisplay="CENTER" prefHeight="64.0" prefWidth="209.0" text="Расставьте корабли">
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
+            <Label fx:id="warnings" alignment="CENTER" contentDisplay="CENTER" prefHeight="109.0" prefWidth="201.0" text="warning">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="countShips" alignment="CENTER" contentDisplay="CENTER" prefHeight="60.0" prefWidth="203.0" text="0/10 кораблей">
+               <font>
+                  <Font size="15.0" />
+               </font></Label>
+            <Button fx:id="clearButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="113.0" text="Очистить">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="readyButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="114.0" text="Готов">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
          </children>
       </VBox>
       <VBox alignment="CENTER" prefHeight="720.0" prefWidth="304.0">

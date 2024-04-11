@@ -5,10 +5,12 @@ import edu.evgen.game.ship.ButtonExtended;
 import edu.evgen.game.Shot;
 import edu.evgen.game.ship.Ship;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import lombok.Data;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -17,7 +19,7 @@ public class MyField extends Field {
     @Getter
     private static ArrayList<Ship> ships = new ArrayList<>();
     private static ArrayList<Shot> shots = new ArrayList<>();
-    private static final ButtonExtended[][] buttonExtendeds = new ButtonExtended[10][10];
+    private static ButtonExtended[][] buttonExtendeds = new ButtonExtended[10][10];
     private static MainController controller;
 
     public static void setController(MainController mainController) {
@@ -40,11 +42,12 @@ public class MyField extends Field {
             cutShip(buttonExtended);
         } else {
             createShip(buttonExtended);
-            Platform.runLater(() -> controller.countShips.setText(String.valueOf(ships.size())));
+            Platform.runLater(() -> controller.countShips.setText(ships.size() + "/10 кораблей"));
         }
         System.out.println(buttonExtended.getFieldType() + " " + buttonExtended.getX() + " " + buttonExtended.getY());
     }
 
+    //логика сокращения, удаления кораблей
     private static void cutShip(ButtonExtended buttonExtended) {
         ArrayList<Ship> shipsToDelete = new ArrayList<>();
         Comparator<ButtonExtended> comparator = Comparator.comparing(ButtonExtended::getX)
@@ -54,17 +57,17 @@ public class MyField extends Field {
                 .filter(ship -> ship.getSize() == 1)
                 .forEach(ship -> {
                     shipsToDelete.add(ship);
-                    Platform.runLater(() -> controller.countShips.setText(String.valueOf(ships.size())));
+                    Platform.runLater(() -> controller.countShips.setText(ships.size() + "/10 кораблей"));
                     buttonExtended.setActivated(false);
-                    buttonExtended.getButton().setStyle("");
+                    buttonExtended.getButton().setStyle("-fx-background-radius: 0;");
                 });
         ships.stream()
                 .filter(ship -> ship.getButtonExtendeds().contains(buttonExtended))
                 .filter(ship -> ship.getSize() == 2)
                 .forEach(ship -> {
-                    Platform.runLater(() -> controller.countShips.setText(String.valueOf(ships.size())));
+                    Platform.runLater(() -> controller.countShips.setText(ships.size() + "/10 кораблей"));
                     buttonExtended.setActivated(false);
-                    buttonExtended.getButton().setStyle("");
+                    buttonExtended.getButton().setStyle(" -fx-background-radius: 0;");
                     ship.setSize(ship.getSize() - 1);
                     ship.getButtonExtendeds().remove(buttonExtended);
                 });
@@ -75,9 +78,9 @@ public class MyField extends Field {
                     Collections.sort(ship.getButtonExtendeds(), comparator);
                     ButtonExtended buttonExtended1 = ship.getButtonExtendeds().getLast();
 
-                        Platform.runLater(() -> controller.countShips.setText(String.valueOf(ships.size())));
+                        Platform.runLater(() -> controller.countShips.setText(ships.size() + "/10 кораблей"));
                         buttonExtended1.setActivated(false);
-                        buttonExtended1.getButton().setStyle("");
+                        buttonExtended1.getButton().setStyle(" -fx-background-radius: 0;");
                         ship.setSize(ship.getSize() - 1);
                         ship.getButtonExtendeds().remove(buttonExtended1);
                 });
@@ -88,16 +91,16 @@ public class MyField extends Field {
                     Collections.sort(ship.getButtonExtendeds(), comparator);
                     ButtonExtended buttonExtended1 = ship.getButtonExtendeds().getLast();
 
-                    Platform.runLater(() -> controller.countShips.setText(String.valueOf(ships.size())));
+                    Platform.runLater(() -> controller.countShips.setText(ships.size() + "/10 кораблей"));
                     buttonExtended1.setActivated(false);
-                    buttonExtended1.getButton().setStyle("");
+                    buttonExtended1.getButton().setStyle(" -fx-background-radius: 0;");
                     ship.setSize(ship.getSize() - 1);
                     ship.getButtonExtendeds().remove(buttonExtended1);
                 });
         shipsToDelete
                 .forEach(ship -> ships.remove(ship));
     }
-
+    //логика создания кораблей !! НЕ ПЫТАТЬСЯ РАЗОБРАТЬСЯ ИЛИ ЧТО-ТО ПОМЕНЯТЬ !!
     private static void createShip(ButtonExtended buttonExtended) {
         Integer x = buttonExtended.getX();
         Integer y = buttonExtended.getY();
@@ -131,7 +134,7 @@ public class MyField extends Field {
                                 ship.extendShip(buttonExtended);
                         });
                     } else {
-                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() >= 4)) {
                             ships.add(new Ship(buttonExtended));
                         }
                     }
@@ -158,7 +161,7 @@ public class MyField extends Field {
                                     ship.extendShip(buttonExtended);
                             });
                         } else {
-                            if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                            if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() >= 4)) {
                                 ships.add(new Ship(buttonExtended));
                             }
                         }
@@ -177,7 +180,7 @@ public class MyField extends Field {
                                 ship.extendShip(buttonExtended);
                         });
                     } else {
-                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() >= 4)) {
                             ships.add(new Ship(buttonExtended));
                         }
                     }
@@ -195,7 +198,7 @@ public class MyField extends Field {
                                 ship.extendShip(buttonExtended);
                         });
                     } else {
-                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() >= 4)) {
                             ships.add(new Ship(buttonExtended));
                         }
                     }
@@ -222,7 +225,7 @@ public class MyField extends Field {
                                     ship.extendShip(buttonExtended);
                             });
                         } else {
-                            if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                            if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() >= 4)) {
                                 ships.add(new Ship(buttonExtended));
                             }
                         }
@@ -241,7 +244,7 @@ public class MyField extends Field {
                                 ship.extendShip(buttonExtended);
                         });
                     } else {
-                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() >= 4)) {
                             ships.add(new Ship(buttonExtended));
                         }
                     }
@@ -259,7 +262,7 @@ public class MyField extends Field {
                                 ship.extendShip(buttonExtended);
                         });
                     } else {
-                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() >= 4)) {
                             ships.add(new Ship(buttonExtended));
                         }
                     }
@@ -285,7 +288,7 @@ public class MyField extends Field {
                                 ship.extendShip(buttonExtended);
                         });
                     } else {
-                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() >= 4)) {
                             ships.add(new Ship(buttonExtended));
                         }
                     }
@@ -311,13 +314,20 @@ public class MyField extends Field {
                                 ship.extendShip(buttonExtended);
                         });
                     } else {
-                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() >= 4)) {
                             ships.add(new Ship(buttonExtended));
                         }
                     }
                 }
             }
         }
+    }
+
+    public static void clear(ActionEvent event) {
+        ships.forEach(ship -> ship.getButtonExtendeds().forEach(buttonExtended -> buttonExtended.setActivated(false)));
+        ships.clear();
+        controller.getMyField().getChildren().forEach(button -> button.setStyle(" -fx-background-radius: 0;"));
+        Platform.runLater(() -> controller.countShips.setText(ships.size() + "/10 кораблей"));
     }
 }
 

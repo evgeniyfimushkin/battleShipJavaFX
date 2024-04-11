@@ -15,13 +15,14 @@ public class MainController {
     @FXML
     GridPane myField, enemyField;
     @FXML
-    Button createShip;
+    Button readyButton, clearButton;
     @FXML
-    public Label countShips;
+    public Label countShips, warnings;
 
     @FXML
     private void initialize() {
         MyField.setController(this);
+        clearButton.setOnAction(MyField::clear);
         fillGridPane(myField, 10, 10, FieldType.MY_FIELD);
         fillGridPane(enemyField, 10, 10, FieldType.ENEMY_FIELD);
     }
