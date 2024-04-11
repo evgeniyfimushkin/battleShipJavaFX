@@ -6,11 +6,15 @@ import edu.evgen.game.Shot;
 import edu.evgen.game.ship.Ship;
 import javafx.application.Platform;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 @Data
 public class MyField extends Field {
+    @Getter
     private static ArrayList<Ship> ships = new ArrayList<>();
     private static ArrayList<Shot> shots = new ArrayList<>();
     private static final ButtonExtended[][] buttonExtendeds = new ButtonExtended[10][10];
@@ -33,13 +37,65 @@ public class MyField extends Field {
 
     private static void buttonAction(ButtonExtended buttonExtended) {
         if (buttonExtended.getActivated()) {
-            buttonExtended.setActivated(false);
-            buttonExtended.getButton().setStyle("");
+            cutShip(buttonExtended);
         } else {
             createShip(buttonExtended);
             Platform.runLater(() -> controller.countShips.setText(String.valueOf(ships.size())));
         }
         System.out.println(buttonExtended.getFieldType() + " " + buttonExtended.getX() + " " + buttonExtended.getY());
+    }
+
+    private static void cutShip(ButtonExtended buttonExtended) {
+        ArrayList<Ship> shipsToDelete = new ArrayList<>();
+        Comparator<ButtonExtended> comparator = Comparator.comparing(ButtonExtended::getX)
+                .thenComparing(ButtonExtended::getY);
+        ships.stream()
+                .filter(ship -> ship.getButtonExtendeds().contains(buttonExtended))
+                .filter(ship -> ship.getSize() == 1)
+                .forEach(ship -> {
+                    shipsToDelete.add(ship);
+                    Platform.runLater(() -> controller.countShips.setText(String.valueOf(ships.size())));
+                    buttonExtended.setActivated(false);
+                    buttonExtended.getButton().setStyle("");
+                });
+        ships.stream()
+                .filter(ship -> ship.getButtonExtendeds().contains(buttonExtended))
+                .filter(ship -> ship.getSize() == 2)
+                .forEach(ship -> {
+                    Platform.runLater(() -> controller.countShips.setText(String.valueOf(ships.size())));
+                    buttonExtended.setActivated(false);
+                    buttonExtended.getButton().setStyle("");
+                    ship.setSize(ship.getSize() - 1);
+                    ship.getButtonExtendeds().remove(buttonExtended);
+                });
+        ships.stream()
+                .filter(ship -> ship.getButtonExtendeds().contains(buttonExtended))
+                .filter((ship -> ship.getSize() == 3))
+                .forEach(ship -> {
+                    Collections.sort(ship.getButtonExtendeds(), comparator);
+                    ButtonExtended buttonExtended1 = ship.getButtonExtendeds().getLast();
+
+                        Platform.runLater(() -> controller.countShips.setText(String.valueOf(ships.size())));
+                        buttonExtended1.setActivated(false);
+                        buttonExtended1.getButton().setStyle("");
+                        ship.setSize(ship.getSize() - 1);
+                        ship.getButtonExtendeds().remove(buttonExtended1);
+                });
+        ships.stream()
+                .filter(ship -> ship.getButtonExtendeds().contains(buttonExtended))
+                .filter((ship -> ship.getSize() == 4))
+                .forEach(ship -> {
+                    Collections.sort(ship.getButtonExtendeds(), comparator);
+                    ButtonExtended buttonExtended1 = ship.getButtonExtendeds().getLast();
+
+                    Platform.runLater(() -> controller.countShips.setText(String.valueOf(ships.size())));
+                    buttonExtended1.setActivated(false);
+                    buttonExtended1.getButton().setStyle("");
+                    ship.setSize(ship.getSize() - 1);
+                    ship.getButtonExtendeds().remove(buttonExtended1);
+                });
+        shipsToDelete
+                .forEach(ship -> ships.remove(ship));
     }
 
     private static void createShip(ButtonExtended buttonExtended) {
@@ -75,31 +131,37 @@ public class MyField extends Field {
                                 ship.extendShip(buttonExtended);
                         });
                     } else {
-                        ships.add(new Ship(buttonExtended));
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                            ships.add(new Ship(buttonExtended));
+                        }
                     }
                 }
             }
         } else if (x == 0) {//левый край
             if (y > 0 && y < 9) {
-                if ((!buttonExtendeds[x + 1][y + 1].getActivated()) &&
-                        (!buttonExtendeds[x + 1][y - 1].getActivated())) {
-                    if (buttonExtendeds[x][y - 1].getActivated()) {
-                        ships.forEach(ship -> {
-                            if (ship.getButtonExtendeds().contains(buttonExtendeds[x][y - 1]))
-                                ship.extendShip(buttonExtended);
-                        });
-                    } else if (buttonExtendeds[x][y + 1].getActivated()) {
-                        ships.forEach(ship -> {
-                            if (ship.getButtonExtendeds().contains(buttonExtendeds[x][y + 1]))
-                                ship.extendShip(buttonExtended);
-                        });
-                    } else if (buttonExtendeds[x + 1][y].getActivated()) {
-                        ships.forEach(ship -> {
-                            if (ship.getButtonExtendeds().contains(buttonExtendeds[x + 1][y]))
-                                ship.extendShip(buttonExtended);
-                        });
-                    } else {
-                        ships.add(new Ship(buttonExtended));
+                if (!(buttonExtendeds[x][y - 1].getActivated() && buttonExtendeds[x][y + 1].getActivated())) {
+                    if ((!buttonExtendeds[x + 1][y + 1].getActivated()) &&
+                            (!buttonExtendeds[x + 1][y - 1].getActivated())) {
+                        if (buttonExtendeds[x][y - 1].getActivated()) {
+                            ships.forEach(ship -> {
+                                if (ship.getButtonExtendeds().contains(buttonExtendeds[x][y - 1]))
+                                    ship.extendShip(buttonExtended);
+                            });
+                        } else if (buttonExtendeds[x][y + 1].getActivated()) {
+                            ships.forEach(ship -> {
+                                if (ship.getButtonExtendeds().contains(buttonExtendeds[x][y + 1]))
+                                    ship.extendShip(buttonExtended);
+                            });
+                        } else if (buttonExtendeds[x + 1][y].getActivated()) {
+                            ships.forEach(ship -> {
+                                if (ship.getButtonExtendeds().contains(buttonExtendeds[x + 1][y]))
+                                    ship.extendShip(buttonExtended);
+                            });
+                        } else {
+                            if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                                ships.add(new Ship(buttonExtended));
+                            }
+                        }
                     }
                 }
             } else if (y == 0) {
@@ -115,7 +177,9 @@ public class MyField extends Field {
                                 ship.extendShip(buttonExtended);
                         });
                     } else {
-                        ships.add(new Ship(buttonExtended));
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                            ships.add(new Ship(buttonExtended));
+                        }
                     }
                 }
             } else if (y == 9) {
@@ -131,31 +195,37 @@ public class MyField extends Field {
                                 ship.extendShip(buttonExtended);
                         });
                     } else {
-                        ships.add(new Ship(buttonExtended));
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                            ships.add(new Ship(buttonExtended));
+                        }
                     }
                 }
             }
         } else if (x == 9) {
             if (y > 0 && y < 9) {
-                if ((!buttonExtendeds[x - 1][y + 1].getActivated()) &&
-                        (!buttonExtendeds[x - 1][y - 1].getActivated())) {
-                    if (buttonExtendeds[x][y - 1].getActivated()) {
-                        ships.forEach(ship -> {
-                            if (ship.getButtonExtendeds().contains(buttonExtendeds[x][y - 1]))
-                                ship.extendShip(buttonExtended);
-                        });
-                    } else if (buttonExtendeds[x][y + 1].getActivated()) {
-                        ships.forEach(ship -> {
-                            if (ship.getButtonExtendeds().contains(buttonExtendeds[x][y + 1]))
-                                ship.extendShip(buttonExtended);
-                        });
-                    } else if (buttonExtendeds[x - 1][y].getActivated()) {
-                        ships.forEach(ship -> {
-                            if (ship.getButtonExtendeds().contains(buttonExtendeds[x - 1][y]))
-                                ship.extendShip(buttonExtended);
-                        });
-                    } else {
-                        ships.add(new Ship(buttonExtended));
+                if (!(buttonExtendeds[x][y - 1].getActivated() && buttonExtendeds[x][y + 1].getActivated())) {
+                    if ((!buttonExtendeds[x - 1][y + 1].getActivated()) &&
+                            (!buttonExtendeds[x - 1][y - 1].getActivated())) {
+                        if (buttonExtendeds[x][y - 1].getActivated()) {
+                            ships.forEach(ship -> {
+                                if (ship.getButtonExtendeds().contains(buttonExtendeds[x][y - 1]))
+                                    ship.extendShip(buttonExtended);
+                            });
+                        } else if (buttonExtendeds[x][y + 1].getActivated()) {
+                            ships.forEach(ship -> {
+                                if (ship.getButtonExtendeds().contains(buttonExtendeds[x][y + 1]))
+                                    ship.extendShip(buttonExtended);
+                            });
+                        } else if (buttonExtendeds[x - 1][y].getActivated()) {
+                            ships.forEach(ship -> {
+                                if (ship.getButtonExtendeds().contains(buttonExtendeds[x - 1][y]))
+                                    ship.extendShip(buttonExtended);
+                            });
+                        } else {
+                            if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                                ships.add(new Ship(buttonExtended));
+                            }
+                        }
                     }
                 }
             } else if (y == 0) {
@@ -171,7 +241,9 @@ public class MyField extends Field {
                                 ship.extendShip(buttonExtended);
                         });
                     } else {
-                        ships.add(new Ship(buttonExtended));
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                            ships.add(new Ship(buttonExtended));
+                        }
                     }
                 }
             } else if (y == 9) {
@@ -187,52 +259,62 @@ public class MyField extends Field {
                                 ship.extendShip(buttonExtended);
                         });
                     } else {
-                        ships.add(new Ship(buttonExtended));
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                            ships.add(new Ship(buttonExtended));
+                        }
                     }
                 }
             }
-        } else if (y == 0){
-            if ((!buttonExtendeds[x + 1][y + 1].getActivated()) &&
-                    (!buttonExtendeds[x - 1][y + 1].getActivated())) {
-                if (buttonExtendeds[x-1][y].getActivated()) {
-                    ships.forEach(ship -> {
-                        if (ship.getButtonExtendeds().contains(buttonExtendeds[x-1][y]))
-                            ship.extendShip(buttonExtended);
-                    });
-                } else if (buttonExtendeds[x+1][y].getActivated()) {
-                    ships.forEach(ship -> {
-                        if (ship.getButtonExtendeds().contains(buttonExtendeds[x+1][y]))
-                            ship.extendShip(buttonExtended);
-                    });
-                } else if (buttonExtendeds[x][y+1].getActivated()) {
-                    ships.forEach(ship -> {
-                        if (ship.getButtonExtendeds().contains(buttonExtendeds[x][y+1]))
-                            ship.extendShip(buttonExtended);
-                    });
-                } else {
-                    ships.add(new Ship(buttonExtended));
+        } else if (y == 0) {
+            if (!(buttonExtendeds[x + 1][y].getActivated() && buttonExtendeds[x - 1][y].getActivated())) {
+                if ((!buttonExtendeds[x + 1][y + 1].getActivated()) &&
+                        (!buttonExtendeds[x - 1][y + 1].getActivated())) {
+                    if (buttonExtendeds[x - 1][y].getActivated()) {
+                        ships.forEach(ship -> {
+                            if (ship.getButtonExtendeds().contains(buttonExtendeds[x - 1][y]))
+                                ship.extendShip(buttonExtended);
+                        });
+                    } else if (buttonExtendeds[x + 1][y].getActivated()) {
+                        ships.forEach(ship -> {
+                            if (ship.getButtonExtendeds().contains(buttonExtendeds[x + 1][y]))
+                                ship.extendShip(buttonExtended);
+                        });
+                    } else if (buttonExtendeds[x][y + 1].getActivated()) {
+                        ships.forEach(ship -> {
+                            if (ship.getButtonExtendeds().contains(buttonExtendeds[x][y + 1]))
+                                ship.extendShip(buttonExtended);
+                        });
+                    } else {
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                            ships.add(new Ship(buttonExtended));
+                        }
+                    }
                 }
             }
-        } else if (y == 9){
-            if ((!buttonExtendeds[x + 1][y - 1].getActivated()) &&
-                    (!buttonExtendeds[x - 1][y - 1].getActivated())) {
-                if (buttonExtendeds[x-1][y].getActivated()) {
-                    ships.forEach(ship -> {
-                        if (ship.getButtonExtendeds().contains(buttonExtendeds[x-1][y]))
-                            ship.extendShip(buttonExtended);
-                    });
-                } else if (buttonExtendeds[x+1][y].getActivated()) {
-                    ships.forEach(ship -> {
-                        if (ship.getButtonExtendeds().contains(buttonExtendeds[x+1][y]))
-                            ship.extendShip(buttonExtended);
-                    });
-                } else if (buttonExtendeds[x][y-1].getActivated()) {
-                    ships.forEach(ship -> {
-                        if (ship.getButtonExtendeds().contains(buttonExtendeds[x][y-1]))
-                            ship.extendShip(buttonExtended);
-                    });
-                } else {
-                    ships.add(new Ship(buttonExtended));
+        } else if (y == 9) {
+            if (!(buttonExtendeds[x + 1][y].getActivated() && buttonExtendeds[x - 1][y].getActivated())) {
+                if ((!buttonExtendeds[x + 1][y - 1].getActivated()) &&
+                        (!buttonExtendeds[x - 1][y - 1].getActivated())) {
+                    if (buttonExtendeds[x - 1][y].getActivated()) {
+                        ships.forEach(ship -> {
+                            if (ship.getButtonExtendeds().contains(buttonExtendeds[x - 1][y]))
+                                ship.extendShip(buttonExtended);
+                        });
+                    } else if (buttonExtendeds[x + 1][y].getActivated()) {
+                        ships.forEach(ship -> {
+                            if (ship.getButtonExtendeds().contains(buttonExtendeds[x + 1][y]))
+                                ship.extendShip(buttonExtended);
+                        });
+                    } else if (buttonExtendeds[x][y - 1].getActivated()) {
+                        ships.forEach(ship -> {
+                            if (ship.getButtonExtendeds().contains(buttonExtendeds[x][y - 1]))
+                                ship.extendShip(buttonExtended);
+                        });
+                    } else {
+                        if (!(MyField.getShips().stream().filter(ship -> ship.getSize() == 1).count() == 4)) {
+                            ships.add(new Ship(buttonExtended));
+                        }
+                    }
                 }
             }
         }
