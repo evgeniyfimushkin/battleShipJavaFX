@@ -1,5 +1,6 @@
-package edu.evgen;
+package edu.evgen.game.ship;
 
+import edu.evgen.game.fields.EnemyField;
 import edu.evgen.game.fields.FieldType;
 import edu.evgen.game.fields.MyField;
 import javafx.event.ActionEvent;
@@ -8,30 +9,29 @@ import lombok.Data;
 
 @Data
 public class ButtonExtended {
-    Button button;
+    private Button button;
     private Integer x;
     private Integer y;
     private FieldType fieldType;
+    private Boolean activated;
 
     public ButtonExtended(Button button, Integer x, Integer y, FieldType fieldType) {
         this.button = button;
         this.x = x;
         this.y = y;
         this.fieldType = fieldType;
+        this.activated = false;
         this.setOnAction();
     }
 
     private void setOnAction() {
         switch (fieldType) {
-            case MY_FIELD -> button.setOnAction(this::setOnActionMyField);
-            case ENEMY_FIELD -> button.setOnAction(this::setOnActionEnemyField);
+            case MY_FIELD -> MyField.buttonExtendedRegister(this);
+            case ENEMY_FIELD -> EnemyField.buttonExtendedRegister(this);
         }
     }
     public void setShot(){
         button.setText("*");
-    }
-    private void setOnActionMyField(ActionEvent rootEvent) {
-        MyField.clickHandler(this);
     }
     private void setOnActionEnemyField(ActionEvent event) {
         setShot();

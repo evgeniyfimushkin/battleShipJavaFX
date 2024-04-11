@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public abstract class Field {
-    private final Integer size = 10;
+    static final Integer size = 10;
 }

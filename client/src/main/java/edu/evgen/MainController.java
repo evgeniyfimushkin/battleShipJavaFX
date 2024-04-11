@@ -2,28 +2,31 @@ package edu.evgen;
 
 import edu.evgen.game.fields.FieldType;
 import edu.evgen.game.fields.MyField;
-import edu.evgen.game.ship.Point;
+import edu.evgen.game.ship.ButtonExtended;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import lombok.Data;
 
 import java.util.ArrayList;
-
+@Data
 public class MainController {
     @FXML
     GridPane myField, enemyField;
     @FXML
     Button createShip;
     @FXML
-    Label countShips;
+    public Label countShips;
 
     @FXML
     private void initialize() {
+        MyField.setController(this);
         fillGridPane(myField, 10, 10, FieldType.MY_FIELD);
         fillGridPane(enemyField, 10, 10, FieldType.ENEMY_FIELD);
     }
 
+    //Создание кнопок в GridPane
     public static void fillGridPane(GridPane gridPane, int width, int height, FieldType type) {
         ArrayList<Button> buttons = new ArrayList<>();
         gridPane.getChildren().clear(); // Очищаем GridPane перед заполнением
