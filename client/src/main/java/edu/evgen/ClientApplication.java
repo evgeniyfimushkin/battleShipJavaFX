@@ -1,6 +1,7 @@
 package edu.evgen;
 
 import edu.evgen.client.Client;
+import edu.evgen.client.DTO.ClientDTO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,7 +19,6 @@ public class ClientApplication extends Application {
         primaryStage.setTitle("FXML Example");
         primaryStage.setResizable(false);
         primaryStage.show();
-        Client client = new Client();
-        client.connect("localhost",8809);
+        Client client = new Client("localhost",8809);
     }
 }

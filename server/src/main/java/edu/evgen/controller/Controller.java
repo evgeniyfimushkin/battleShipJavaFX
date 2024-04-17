@@ -2,6 +2,7 @@ package edu.evgen.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.evgen.DTO.ClientDTO;
+import edu.evgen.client.ClientStatus;
 import edu.evgen.repository.ClientRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +46,20 @@ public class Controller {
     @SneakyThrows
     private void disconnectClient(@RequestBody ClientDTO clientDTO) {
         clientRepository.delete(clientDTO);
+    }
+    @PostMapping("/api/play")
+    @SneakyThrows
+    private String startPlaying(@RequestBody List<edu.evgen.client.DTO.ClientDTO> clientDTOList){
+        if (clientRepository.findById(clientDTOList.get(0).getId()).isPresent() && clientRepository.findById(clientDTOList.get(1).getId()).isPresent()){
+
+            return "GAMINGA "+ clientDTOList;
+        }
+        else return "NO GAMINGA";
+    }
+
+    @PostMapping("/api/status")
+    @SneakyThrows
+    private ClientStatus getStatus(@RequestBody edu.evgen.client.DTO.ClientDTO clientDTO){
+        return ClientStatus.NONE;
     }
 }
