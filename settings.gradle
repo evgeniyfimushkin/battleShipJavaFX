@@ -1,2 +1,3 @@
+rootProject.name = 'BattleShip'
 include "client"
 include "server"

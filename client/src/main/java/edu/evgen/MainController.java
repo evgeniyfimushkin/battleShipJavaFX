@@ -21,15 +21,16 @@ public class MainController {
 
     @FXML
     private void initialize() {
-        MyField.setController(this);
-        clearButton.setOnAction(MyField::clear);
+
+        MyField myMainField = new MyField(this);
+        clearButton.setOnAction(myMainField::clear);
+        readyButton.setOnAction(event -> myMainField.setHit(1,1));
         fillGridPane(myField, 10, 10, FieldType.MY_FIELD);
         fillGridPane(enemyField, 10, 10, FieldType.ENEMY_FIELD);
     }
 
     //Создание кнопок в GridPane
     public static void fillGridPane(GridPane gridPane, int width, int height, FieldType type) {
-        ArrayList<Button> buttons = new ArrayList<>();
         gridPane.getChildren().clear(); // Очищаем GridPane перед заполнением
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
