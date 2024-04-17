@@ -26,15 +26,24 @@ public class Controller {
         return clientRepository.findAll();
     }
 
+    @GetMapping("/api/connect/client")
+    @SneakyThrows
+    private String getClients(@RequestBody ClientDTO clientDTO) {
+        if (clientRepository.findById(clientDTO.getId()).isPresent()) return "CONNECTED";
+        else return "DISCONNECTED";
+    }
+
     @PostMapping("/api/connect")
     @SneakyThrows
-    private List<ClientDTO> connectClient() {
-        log.info("New Client: " + clientRepository.save(new ClientDTO()));
-        return clientRepository.findAll();
+    private ClientDTO connectClient() {
+        ClientDTO clientDTO = new ClientDTO();
+        log.info("New Client: " + clientRepository.save(clientDTO));
+        return clientDTO;
     }
+
     @DeleteMapping("/api/connect")
     @SneakyThrows
-    private void disconnectClient(@RequestParam Integer id){
-        clientRepository.deleteById(id);
+    private void disconnectClient(@RequestBody ClientDTO clientDTO) {
+        clientRepository.delete(clientDTO);
     }
 }
