@@ -1,6 +1,6 @@
 package edu.evgen.game.fields;
 
-import edu.evgen.MainController;
+import edu.evgen.controllers.MainController;
 import edu.evgen.game.Shot;
 import edu.evgen.game.ship.ButtonExtended;
 import edu.evgen.game.ship.Ship;

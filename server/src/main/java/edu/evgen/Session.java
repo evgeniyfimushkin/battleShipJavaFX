@@ -118,8 +118,8 @@ public class Session implements Closeable {
     @Override
     @SneakyThrows
     public void close() throws IOException {
-        socket.close();
         server.sessions.remove(this);
         server.sessions.forEach(server::sendSessions);
+        socket.close();
     }
 }

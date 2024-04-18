@@ -1,4 +1,4 @@
-package edu.evgen;
+package edu.evgen.controllers;
 
 import edu.evgen.client.Client;
 import edu.evgen.client.ClientController;
@@ -11,9 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import lombok.Data;
 
-import java.util.ArrayList;
 @Data
-public class MainController {
+public class MainController extends AbstractController {
     @FXML
     GridPane myField, enemyField;
     @FXML
@@ -25,9 +24,6 @@ public class MainController {
 
     @FXML
     private void initialize() {
-
-        clientController = new ClientController(this);
-        client = new Client("localhost",19000, clientController);
 
         MyField myMainField = new MyField(this);
         clearButton.setOnAction(myMainField::clear);

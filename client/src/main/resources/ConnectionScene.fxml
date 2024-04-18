@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox alignment="CENTER" prefHeight="720" prefWidth="321.0" style="-fx-spacing: 20; -fx-background-color: #f0f0f0;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.evgen.controllers.ConnectionController">
+    <children>
+        <!-- Левый VBox -->
+        <VBox prefHeight="720.0" prefWidth="328.0" style="-fx-background-color: #ffffff; -fx-padding: 20;">
+
+            <!-- Пустой VBox для отступа -->
+            <VBox alignment="CENTER" prefHeight="720.0" prefWidth="202.0" style="-fx-padding: 10; -fx-spacing: 20;">
+                <children>
+                    <!-- Заголовок "Sea Battle" -->
+                    <Label style="-fx-font-size: 24; -fx-font-weight: bold; -fx-padding: 10;" text="Sea Battle" />
+                    <Label alignment="BOTTOM_CENTER" prefHeight="99.0" prefWidth="235.0" style="-fx-font-size: 20; -fx-font-weight: Bold;" text="Connect the Server" />
+
+                    <!-- Поле ввода ID клиента -->
+                    <HBox alignment="CENTER" spacing="5" />
+                    <TextField fx:id="adressTextField" prefHeight="28.0" prefWidth="261.0" promptText="Enter address server" />
+                    <Button fx:id="playButton" prefHeight="31.0" prefWidth="89.0" text="Connect" />
+                </children>
+            </VBox>
+        </VBox>
+    </children>
+</HBox>

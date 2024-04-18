@@ -1,6 +1,6 @@
 package edu.evgen.client;
 
-import edu.evgen.MainController;
+import edu.evgen.controllers.MainController;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,8 +14,11 @@ public class ClientController {
     private List<String> clients;
     MainController mainController;
 
-    public ClientController(MainController mainController) {
+    public ClientController() {
         clients = new ArrayList<>();
+    }
+
+    public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
 
