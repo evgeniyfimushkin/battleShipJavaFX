@@ -16,7 +16,6 @@ import java.io.IOException;
 
 @Slf4j
 public class ConnectionController extends AbstractController {
-    Client client;
     ClientController clientController;
     @FXML
     TextField adressTextField;
@@ -51,26 +50,16 @@ public class ConnectionController extends AbstractController {
     }
 
     private void connect() {
-        Stage currentStage = (Stage) stage.getScene().getWindow(); // замените yourCurrentNode на любой узел в вашем текущем окне
-
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("StartScene.fxml"));
-            StartController controller = new StartController();
-            loader.setController(controller);
-
-            // Загружаем новый FXML файл
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/StartScene.fxml"));
             Parent root = loader.load();
-
-            // Создаем новую сцену
+            StartController controller = loader.getController(); // Получаем контроллер после загрузки FXML
+            controller.setClient(client);
+            controller.setStage(stage); // Передаем текущий Stage в контроллер
             Scene scene = new Scene(root);
-
-            // Устанавливаем новую сцену на текущем Stage
-            currentStage.setScene(scene);
-            currentStage.show();
-
-            // Закрываем текущее окно
-//            currentStage.close();
+            stage.setScene(scene);
         } catch (IOException e) {
+            e.printStackTrace();
             log.info("ERROR");
         }
     }

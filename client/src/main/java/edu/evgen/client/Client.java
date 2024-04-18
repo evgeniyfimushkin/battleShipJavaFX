@@ -1,9 +1,7 @@
 package edu.evgen.client;
 
 import javafx.scene.control.Alert;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.Synchronized;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Closeable;
@@ -18,6 +16,8 @@ import static edu.evgen.client.MessageMarker.*;
 
 @RequiredArgsConstructor
 @Slf4j
+@Getter
+@Setter
 public class Client implements Closeable {
 
     private final Socket socket;
@@ -32,8 +32,8 @@ public class Client implements Closeable {
         this.clientController = clientController;
         try {
             socket1 = new Socket(address, port);
-            info(String.format("Connection Succedd %s:%d", address, port));
-        }catch (Throwable e){
+//            info(String.format("Connection Succedd %s:%d", address, port));
+        } catch (Throwable e) {
             socket1 = null;
             info(String.format("Failed connection %s:%d", address, port));
         }
@@ -114,7 +114,8 @@ public class Client implements Closeable {
         outputStream.writeObject(message);
         socket.close();
     }
-    private void info(String string){
+
+    private void info(String string) {
         log.info(string);
         //Вывод в окошко
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -122,5 +123,15 @@ public class Client implements Closeable {
         alert.setHeaderText(null);
         alert.setContentText(string);
         alert.showAndWait();
+    }
+
+    @SneakyThrows
+    public void getSessionsRequest() {
+        Message message = new Message(SESSIONS, id, id, null);
+
+        log.info("getSessionsRequest {}", message);
+        ObjectOutputStream outputStream;
+        outputStream = new ObjectOutputStream(socket.getOutputStream());
+        outputStream.writeObject(message);
     }
 }

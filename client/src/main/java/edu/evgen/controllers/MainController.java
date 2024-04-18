@@ -10,8 +10,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import lombok.Data;
+import lombok.Getter;
 
 @Data
+@Getter
 public class MainController extends AbstractController {
     @FXML
     GridPane myField, enemyField;

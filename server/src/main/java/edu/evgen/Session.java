@@ -81,6 +81,10 @@ public class Session implements Closeable {
                 }
 
                 switch (message.getMarker()) {
+                    case SESSIONS:
+                        log.info("getSessionsRequest");
+                        server.sendSessions(this);
+                        break;
                     case SHOTREQUEST:
                         transport(message);
                         break;
@@ -118,6 +122,7 @@ public class Session implements Closeable {
     @Override
     @SneakyThrows
     public void close() throws IOException {
+        server.ids.remove(this.id);
         server.sessions.remove(this);
         server.sessions.forEach(server::sendSessions);
         socket.close();
