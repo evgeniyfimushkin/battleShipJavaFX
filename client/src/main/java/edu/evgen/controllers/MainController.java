@@ -2,9 +2,12 @@ package edu.evgen.controllers;
 
 import edu.evgen.client.Client;
 import edu.evgen.client.ClientController;
+import edu.evgen.game.fields.EnemyField;
+import edu.evgen.game.fields.Field;
 import edu.evgen.game.fields.FieldType;
 import edu.evgen.game.fields.MyField;
 import edu.evgen.game.ship.ButtonExtended;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,13 +26,15 @@ public class MainController extends AbstractController {
     public Label countShips, warnings;
     private ClientController clientController;
     private Client client;
+    MyField myMainField;
+//    EnemyField enemyField;
 
     @FXML
     private void initialize() {
-
-        MyField myMainField = new MyField(this);
+//        enemyField = new EnemyField();
+        myMainField = new MyField(this);
         clearButton.setOnAction(myMainField::clear);
-        readyButton.setOnAction(event -> myMainField.setHit(1,1));
+        readyButton.setOnAction(myMainField::ready);
         fillGridPane(myField, 10, 10, FieldType.MY_FIELD);
         fillGridPane(enemyField, 10, 10, FieldType.ENEMY_FIELD);
     }

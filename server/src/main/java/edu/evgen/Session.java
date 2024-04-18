@@ -23,6 +23,7 @@ public class Session implements Closeable {
     private final Server server;
     public final Socket socket;
     public String id;
+    public String opponent;
     Boolean run;
     Thread listener = new Thread(this::listen);
 
@@ -80,6 +81,8 @@ public class Session implements Closeable {
                     continue;
                 }
 
+                log.info("{}",message.getMarker());
+
                 switch (message.getMarker()) {
                     case SESSIONS:
                         log.info("getSessionsRequest");
@@ -99,6 +102,8 @@ public class Session implements Closeable {
                         transport(message);
                         break;
                     case STARTGAMING:
+                        opponent = message.getSender();
+                        log.info("Gaming Started {} vs {}", id, opponent);
                         transport(message);
                         break;
                     case OFFERREQUEST:

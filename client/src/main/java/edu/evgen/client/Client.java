@@ -141,7 +141,7 @@ public class Client implements Closeable {
 //                && !id.equals(idResiept)
         ) {
             Message message = new Message(messageMarker, id, idResiept, null);
-            log.info("OfferRequest {}", message.getList());
+            log.info("{}", message.getMarker());
             ObjectOutputStream outputStream;
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(message);
@@ -149,10 +149,14 @@ public class Client implements Closeable {
     }
     @SneakyThrows
     public void sendNotEmptyMessage(Message message) {
-            log.info("OfferRequest {}", message.getList());
+            log.info("{}", message.getMarker());
             ObjectOutputStream outputStream;
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(message);
 
+    }
+
+    public void ready() {
+        sendEmptyMessage(READY,id);
     }
 }

@@ -31,15 +31,15 @@ public class ClientController {
     }
 
     public void refreshClients(Message message) {
-        if (clients != null)
-            clients.clear();
-        if (controller.getClass().equals(StartController.class)) {
-            ((StartController) controller).getClientListTextArea().clear();
-            clients.addAll((Collection<? extends String>) message.getList());
-            message.getList().forEach(id -> ((StartController) controller).getClientListTextArea().appendText((String) id + "\n"));
-        }
-//        ((StartController) controller).getClientListTextArea().setText(message.getList().toString());
-//        startController.getClientIdTextField().setText(clients.toString());
+        Platform.runLater(() -> {
+                    if (clients != null)
+                        clients.clear();
+                    if (controller.getClass().equals(StartController.class)) {
+                        ((StartController) controller).getClientListTextArea().clear();
+                        clients.addAll((Collection<? extends String>) message.getList());
+                        message.getList().forEach(id -> ((StartController) controller).getClientListTextArea().appendText((String) id + "\n"));
+                    }
+                });
 
     }
 @SneakyThrows

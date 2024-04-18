@@ -13,7 +13,8 @@ public enum MessageMarker {
     SHOTREQUEST("@SHOTREQUEST@"),
     SHOTRESPONSE("@SHOTRESPONSE@"),
     WIN("@WIN@"),
-    ENDGAME("@ENDGAME@");
+    ENDGAME("@ENDGAME@"),
+    READY("@READY@");
 
     private final String marker;
 
