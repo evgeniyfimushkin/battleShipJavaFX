@@ -26,20 +26,18 @@ configurations {
 }
 
 dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    	implementation 'org.springframework.boot:spring-boot-starter-validation'
-    	implementation 'org.springframework.boot:spring-boot-starter-web'
-    	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
+
     	compileOnly 'org.projectlombok:lombok'
-    	runtimeOnly 'org.postgresql:postgresql'
     	annotationProcessor 'org.projectlombok:lombok'
-    	testImplementation 'org.springframework.boot:spring-boot-starter-test'
     	implementation project(':client')
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.12'
+        implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.12'
 }
 
 application {
     mainModule.set('edu.evgen')
     mainClass.set('edu.evgen.ServerApplication')
+
 }
 tasks.named('test') {
     useJUnitPlatform()

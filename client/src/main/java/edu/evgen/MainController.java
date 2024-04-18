@@ -1,5 +1,7 @@
 package edu.evgen;
 
+import edu.evgen.client.Client;
+import edu.evgen.client.ClientController;
 import edu.evgen.game.fields.FieldType;
 import edu.evgen.game.fields.MyField;
 import edu.evgen.game.ship.ButtonExtended;
@@ -18,9 +20,14 @@ public class MainController {
     Button readyButton, clearButton;
     @FXML
     public Label countShips, warnings;
+    private ClientController clientController;
+    private Client client;
 
     @FXML
     private void initialize() {
+
+        clientController = new ClientController(this);
+        client = new Client("localhost",19000, clientController);
 
         MyField myMainField = new MyField(this);
         clearButton.setOnAction(myMainField::clear);
