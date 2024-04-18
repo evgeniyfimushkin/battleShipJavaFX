@@ -2,8 +2,6 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'java'
-    id 'org.springframework.boot' version '3.2.4'
-    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'edu.evgen'
@@ -26,12 +24,14 @@ configurations {
 }
 
 dependencies {
-
-    	compileOnly 'org.projectlombok:lombok'
-    	annotationProcessor 'org.projectlombok:lombok'
-    	implementation project(':client')
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.12'
+	compileOnly 'org.projectlombok:lombok:1.18.32'
+	annotationProcessor 'org.projectlombok:lombok:1.18.32'
+    implementation project(':client')
+	testCompileOnly 'org.projectlombok:lombok:1.18.32'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
+	implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.12'
         implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.12'
+
 }
 
 application {

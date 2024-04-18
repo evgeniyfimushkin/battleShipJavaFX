@@ -5,12 +5,9 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Collection;
-import java.util.List;
 
 import static edu.evgen.client.MessageMarker.*;
 
@@ -49,6 +46,8 @@ public class Client implements Closeable {
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             Message message = (Message) objectInputStream.readObject();
 
+            log.info("MESSAGE {}", message.getMarker());
+
             if (message == null) {
                 continue;
             }
@@ -76,10 +75,10 @@ public class Client implements Closeable {
 
                     break;
                 case OFFERREQUEST:
-
+                    clientController.askNewGame(message);
                     break;
                 case OFFERRESPONSE:
-
+                    clientController.offerResponseRead(message);
                     break;
                 case ENDGAME:
 
@@ -97,6 +96,7 @@ public class Client implements Closeable {
     private void getIdFromServer(Message message) {
         id = (String) message.getList().getLast();
         log.info("getIdFromServer -> {}", id);
+        clientController.printMyId(id);
 //        controller.printId(id);
     }
 
@@ -119,7 +119,7 @@ public class Client implements Closeable {
         log.info(string);
         //Вывод в окошко
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Информация");
+        alert.setTitle("info");
         alert.setHeaderText(null);
         alert.setContentText(string);
         alert.showAndWait();
@@ -133,5 +133,26 @@ public class Client implements Closeable {
         ObjectOutputStream outputStream;
         outputStream = new ObjectOutputStream(socket.getOutputStream());
         outputStream.writeObject(message);
+    }
+
+    @SneakyThrows
+    public void sendEmptyMessage(MessageMarker messageMarker, String idResiept) {
+        if (clientController.getClients().contains(idResiept)
+//                && !id.equals(idResiept)
+        ) {
+            Message message = new Message(messageMarker, id, idResiept, null);
+            log.info("OfferRequest {}", message.getList());
+            ObjectOutputStream outputStream;
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            outputStream.writeObject(message);
+        }
+    }
+    @SneakyThrows
+    public void sendNotEmptyMessage(Message message) {
+            log.info("OfferRequest {}", message.getList());
+            ObjectOutputStream outputStream;
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            outputStream.writeObject(message);
+
     }
 }

@@ -16,7 +16,7 @@ public abstract class AbstractController implements IAlertable{
     public void alert(String string) {
         log.info(string);
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle("Информация");
+        alert.setTitle("info");
         alert.setHeaderText(null);
         alert.setContentText(string);
         alert.showAndWait();
