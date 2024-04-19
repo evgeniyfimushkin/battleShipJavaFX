@@ -185,6 +185,6 @@ public class Client implements Closeable {
         list.add((Integer) message.getList().getFirst());
         list.add((Integer) message.getList().getLast());
         list.add(isHitted);
-        sendNotEmptyMessage(new Message(SHOTRESPONSE, message.getRecipient(), message.getSender(), list));
+        sendNotEmptyMessage(new Message(SHOTRESPONSE, id, message.getSender(), list));
     }
 }

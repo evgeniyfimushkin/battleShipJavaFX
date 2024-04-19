@@ -107,7 +107,10 @@ public class Session implements Closeable {
                         break;
                     case SHOTRESPONSE:
                         transport(message);
-                        //MOVE,WIN
+                        server.games
+                                .stream()
+                                .filter((game -> (game.getPlayer1().toString().equals(id)||game.getPlayer2().toString().equals(id))))
+                                .forEach(game -> game.moveChange(message.getRecipient()));
                         break;
                     case WIN:
                         transport(message);

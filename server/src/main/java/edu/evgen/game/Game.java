@@ -22,12 +22,12 @@ public class Game {
         this.player1Sesiion = player1Sesiion;
         this.player2Sesiion = player2Sesiion;
 
-        log.info("New Game \n {} \n {}",this.player1, this.player2);
+        log.info("New Game \n {} \n {}", this.player1, this.player2);
     }
 
     public void readySecond(Session session) {
         log.info("readySecond");
-        if (player2Sesiion.equals(session)){
+        if (player2Sesiion.equals(session)) {
             player1.setAction(MOVE);
             player2.setAction(WAIT);
             move();
@@ -39,5 +39,18 @@ public class Game {
         player1Sesiion.sendMarkerMessage(player1Message);
         Message player2Message = new Message(player2.getAction(), player2.getId(), player2.getId(), null);
         player2Sesiion.sendMarkerMessage(player2Message);
+    }
+
+
+    public void moveChange(String recipient) {
+        if (player1.toString().equals(recipient)) {
+            player1.setAction(WAIT);
+            player2.setAction(MOVE);
+            move();
+        }else if (player2.toString().equals(recipient)){
+            player1.setAction(MOVE);
+            player2.setAction(WAIT);
+            move();
+        }
     }
 }
