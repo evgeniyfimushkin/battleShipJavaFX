@@ -188,6 +188,7 @@ public class Client implements Closeable {
         sendNotEmptyMessage(new Message(SHOTRESPONSE, id, message.getSender(), list));
     }
 
+
     public void sendEndGameMessage() {
         status = ENDGAME;
         sendEmptyMessage(ENDGAME,opponent);
