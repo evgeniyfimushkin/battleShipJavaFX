@@ -7,14 +7,15 @@ public enum MessageMarker {
     OFFERREQUEST("@OFFERREQUEST@"),
     OFFERRESPONSE("OFFERRESPONSE"),
     STARTGAMING("@STARTGAMING@"),
-    FINISHHAMING("@FINISHHAMING@"),
+    RESTART("@RESTART@"),
     MOVE("@MOVE@"),
     WAIT("@WAIT@"),
     SHOTREQUEST("@SHOTREQUEST@"),
     SHOTRESPONSE("@SHOTRESPONSE@"),
     WIN("@WIN@"),
     ENDGAME("@ENDGAME@"),
-    READY("@READY@");
+    READY("@READY@"),
+    EMPTY("@EMPTY@");//for not NPE
 
     private final String marker;
 

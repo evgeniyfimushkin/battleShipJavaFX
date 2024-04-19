@@ -2,7 +2,6 @@ package edu.evgen.game.fields;
 
 import edu.evgen.controllers.MainController;
 import edu.evgen.game.ship.ButtonExtended;
-import edu.evgen.game.Shot;
 import edu.evgen.game.ship.Ship;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
@@ -10,7 +9,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @Data
 @Slf4j

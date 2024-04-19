@@ -123,6 +123,13 @@ public class ClientController {
             alert.setContentText("You Win! Want to play again?");
             alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
             ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+            if (result == ButtonType.YES) {
+                controller.getClient().restartRequest();
+            }
         });
+    }
+
+    public void restartHandler(Message message) {
+        ((MainController)controller).restart();
     }
 }

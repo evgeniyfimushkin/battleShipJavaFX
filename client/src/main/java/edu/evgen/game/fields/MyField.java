@@ -1,7 +1,6 @@
 package edu.evgen.game.fields;
 
 import edu.evgen.controllers.MainController;
-import edu.evgen.game.Shot;
 import edu.evgen.game.ship.ButtonExtended;
 import edu.evgen.game.ship.Ship;
 import javafx.application.Platform;
@@ -21,7 +20,6 @@ import static edu.evgen.client.MessageMarker.*;
 public class MyField extends Field {
     @Getter
     private ArrayList<Ship> ships = new ArrayList<>();
-    private ArrayList<Shot> shots = new ArrayList<>();
     private MainController controller;
 
     public MyField(MainController controller) {
@@ -403,14 +401,16 @@ public class MyField extends Field {
         Platform.runLater(() -> controller.countShips.setText(ships.size() + "/10 ships"));
         if (ships.size() == 0) {
             controller.getClient().sendEndGameMessage();
-            Platform.runLater(()->{
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Dialog");
-            alert.setHeaderText(null);
-            alert.setContentText("You Lose! Want to play again?");
-            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-            ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
-
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Dialog");
+                alert.setHeaderText(null);
+                alert.setContentText("You Lose! Want to play again?");
+                alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+                ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+                if (result == ButtonType.YES) {
+                    controller.getClient().restartRequest();
+                }
             });
         }
     }

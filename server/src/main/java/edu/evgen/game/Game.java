@@ -53,4 +53,18 @@ public class Game {
             move();
         }
     }
+
+    public void restartRequest(String recipient) {
+        if (player1.toString().equals(recipient)) {
+            player1.setAction(RESTART);
+        }else if (player2.toString().equals(recipient)){
+            player2.setAction(RESTART);
+        }
+        if (player1.getAction().equals(RESTART) && player2.getAction().equals(RESTART)){
+            Message message1 = new Message(RESTART, player2.getId(), player1.getId(),null);
+            Message message2 = new Message(RESTART, player1.getId(), player2.getId(),null);
+            player1Sesiion.sendMarkerMessage(message1);
+            player2Sesiion.sendMarkerMessage(message2);
+        }
+    }
 }

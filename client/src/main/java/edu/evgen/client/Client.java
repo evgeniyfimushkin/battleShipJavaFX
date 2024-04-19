@@ -22,7 +22,7 @@ import static edu.evgen.client.MessageMarker.*;
 public class Client implements Closeable {
 
     private final Socket socket;
-    private MessageMarker status;
+    private MessageMarker status = EMPTY;
     public String id;
     private String opponent;
     private Thread listener = new Thread(this::listen);
@@ -94,8 +94,11 @@ public class Client implements Closeable {
                     status = message.getMarker();
                     clientController.winHandler(message);
                     break;
+                case RESTART:
+                    clientController.restartHandler(message);
+                    break;
                 case STARTGAMING:
-
+                    status = message.getMarker();
                     break;
                 default:
                     break;
@@ -192,5 +195,9 @@ public class Client implements Closeable {
     public void sendEndGameMessage() {
         status = ENDGAME;
         sendEmptyMessage(ENDGAME,opponent);
+    }
+
+    public void restartRequest() {
+        sendEmptyMessage(RESTART,opponent);
     }
 }

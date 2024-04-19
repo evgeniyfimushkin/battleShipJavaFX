@@ -132,6 +132,11 @@ public class Session implements Closeable {
                     case DISCONNECT:
                         disconnect();
                         break;
+                    case RESTART:
+                        server.games.stream()
+                                .filter((game -> (game.getPlayer1().toString().equals(id)||game.getPlayer2().toString().equals(id))))
+                                .forEach(game -> game.restartRequest(message.getRecipient()));
+                        break;
                     default:
                         break;
                 }
