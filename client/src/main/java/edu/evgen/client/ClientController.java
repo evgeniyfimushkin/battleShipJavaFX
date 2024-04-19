@@ -82,16 +82,14 @@ public class ClientController {
     }
 
     public void moveCommand() {
-        ((MainController)controller).getInfo().setText("You're moving");
-        Arrays.stream(((MainController)controller)//убираем действия с наших кнопок
-                .getMyMainField()
-                .getButtonExtendeds())
-                .forEach(row -> Arrays.stream(row)
-                        .forEach(buttonExtended -> buttonExtended.getButton().setOnAction(event -> {})));
+        Platform.runLater(() -> ((MainController)controller).getInfo().setText("You're moving"));
+//        Arrays.stream(((MainController)controller)//убираем действия с наших кнопок
+//                .getMyMainField()
+//                .getButtonExtendeds())
+//                .forEach(row -> Arrays.stream(row)
+//                        .forEach(buttonExtended -> buttonExtended.getButton().setOnAction(event -> {})));
     }
-
     public void waitCommand() {
-        ((MainController)controller).getInfo().setText("Waiting for opponent's move");
-        //setonactionbutton
+        Platform.runLater(() -> ((MainController)controller).getInfo().setText("Waiting for opponent's move"));
     }
 }

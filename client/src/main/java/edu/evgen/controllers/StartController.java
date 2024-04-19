@@ -105,6 +105,7 @@ public class StartController extends AbstractController {
                 MainController controller = loader.getController(); // Получаем контроллер после загрузки FXML
                 controller.setClient(client);
                 controller.setStage(stage); // Передаем текущий Stage в контроллер
+                controller.getClient().getClientController().setController(controller);
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
             } catch (IOException e) {

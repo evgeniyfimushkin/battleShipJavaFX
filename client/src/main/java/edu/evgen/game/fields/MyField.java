@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import static edu.evgen.client.MessageMarker.*;
+
 @Data
 public class MyField extends Field {
     @Getter
@@ -314,9 +316,11 @@ public class MyField extends Field {
     }
 
     public void clear(ActionEvent event) {
-        clearButtons();
-        ships.clear();
-        Platform.runLater(() -> controller.countShips.setText(ships.size() + "/10 ships"));
+        if (controller.getClient().getStatus().equals(STARTGAMING)){
+            clearButtons();
+            ships.clear();
+            Platform.runLater(() -> controller.countShips.setText(ships.size() + "/10 ships"));
+        }
     }
 
     private void clearButtons() {
