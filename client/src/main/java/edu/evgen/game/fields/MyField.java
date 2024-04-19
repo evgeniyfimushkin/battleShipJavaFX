@@ -316,7 +316,7 @@ public class MyField extends Field {
     }
 
     public void clear(ActionEvent event) {
-        if (controller.getClient().getStatus().equals(STARTGAMING)){
+        if (controller.getClient().getStatus().equals(STARTGAMING)) {
             clearButtons();
             ships.clear();
             Platform.runLater(() -> controller.countShips.setText(ships.size() + "/10 ships"));
@@ -336,19 +336,30 @@ public class MyField extends Field {
         }
     }
 
-    public void setHit(Integer x, Integer y) {
+    public Integer setHit(Integer x, Integer y) {
         if (//если координаты являются частью корабля
                 ships.stream().filter(ship -> ship.getButtonExtendeds().contains(buttonExtendeds[x][y])).count() > 0
         ) {
-            buttonExtendeds[x][y].getButton().setStyle(" -fx-background-radius: 0; -fx-background-color: red");
-            buttonExtendeds[x][y].getButton().setText("X");
-            buttonExtendeds[x][y].setHited(true);
-            //Для корабля, содержащего, эту кнопку, вызвать метод getHit - который проверяет убит ли кобаль полностью
-            ships.stream().filter(ship -> ship.getButtonExtendeds().contains(buttonExtendeds[x][y])).toList().forEach(ship -> getHit(ship));
+            Platform.runLater(() -> {
+                buttonExtendeds[x][y].getButton().setStyle(" -fx-background-radius: 0; -fx-background-color: red");
+                buttonExtendeds[x][y].getButton().setText("X");
+                buttonExtendeds[x][y].setHited(true);
+                //Для корабля, содержащего, эту кнопку, вызвать метод getHit - который проверяет убит ли кобаль полностью
+
+            });
+            Ship hittedShip = ships.stream().filter(ship -> ship.getButtonExtendeds().contains(buttonExtendeds[x][y])).toList().getLast();
+            if (getHit(hittedShip))
+                return 2;
+            else
+                return 1;
         } else {// если не являются частью корабля
-            buttonExtendeds[x][y].getButton().setText("*");
-            buttonExtendeds[x][y].setHited(true);
+            Platform.runLater(() -> {
+                buttonExtendeds[x][y].getButton().setText("*");
+                buttonExtendeds[x][y].setHited(true);
+            });
+            return 0;
         }
+
     }
 
     //Расширение корабля
@@ -372,11 +383,15 @@ public class MyField extends Field {
     }
 
     //обработка попадания
-    public void getHit(Ship ship) {
+    public Boolean getHit(Ship ship) {
         if (ship.getButtonExtendeds().stream().filter(buttonExtended -> (buttonExtended.getHited() == true)).count() == ship.getSize()) {
-            ship.getButtonExtendeds().forEach(buttonExtended -> buttonExtended.getButton().setDisable(true));
-            this.killShip(ship);
+            Platform.runLater(() -> {
+                ship.getButtonExtendeds().forEach(buttonExtended -> buttonExtended.getButton().setDisable(true));
+                this.killShip(ship);
+            });
+            return true;
         }
+        return false;
     }
 
     //обработка уничтожения корабля
@@ -396,7 +411,8 @@ public class MyField extends Field {
                 controller.getClient().ready();
                 controller.getReadyButton().setDisable(true);
                 controller.getInfo().setText("Waiting for opponent");
-                setAllButtonsAction(empty -> {});
+                setAllButtonsAction(empty -> {
+                });
             } else {
                 alert("Bad ships");
             }

@@ -30,7 +30,6 @@ public class MainController extends AbstractController {
 
     @FXML
     private void initialize() {
-//        enemyField = new EnemyField();
         myMainField = new MyField(this);
         enemyMainField = new EnemyField(this);
         clearButton.setOnAction(myMainField::clear);
@@ -55,8 +54,8 @@ public class MainController extends AbstractController {
                     buttonExtended.getButton().setOnAction(event -> myMainField.buttonCreateShipsAction(buttonExtended));
                     myMainField.buttonExtendedsAdd(buttonExtended);
                 }else if (field.getClass().equals(EnemyField.class)) {
-                    enemyMainField.buttonExtendedsAdd(buttonExtended);
                     buttonExtended.getButton().setOnAction(event -> enemyMainField.buttonEnemyEnemy(buttonExtended));
+                    enemyMainField.buttonExtendedsAdd(buttonExtended);
                 }
             }
         }

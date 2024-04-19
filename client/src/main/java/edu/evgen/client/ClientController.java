@@ -3,9 +3,12 @@ package edu.evgen.client;
 import edu.evgen.controllers.AbstractController;
 import edu.evgen.controllers.MainController;
 import edu.evgen.controllers.StartController;
+import edu.evgen.game.ship.ButtonExtended;
+import edu.evgen.game.ship.Ship;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -33,29 +36,30 @@ public class ClientController {
 
     public void refreshClients(Message message) {
         Platform.runLater(() -> {
-                    if (clients != null)
-                        clients.clear();
-                    if (controller.getClass().equals(StartController.class)) {
-                        ((StartController) controller).getClientListTextArea().clear();
-                        clients.addAll((Collection<? extends String>) message.getList());
-                        message.getList().forEach(id -> ((StartController) controller).getClientListTextArea().appendText((String) id + "\n"));
-                    }
-                });
+            if (clients != null)
+                clients.clear();
+            if (controller.getClass().equals(StartController.class)) {
+                ((StartController) controller).getClientListTextArea().clear();
+                clients.addAll((Collection<? extends String>) message.getList());
+                message.getList().forEach(id -> ((StartController) controller).getClientListTextArea().appendText((String) id + "\n"));
+            }
+        });
 
     }
-@SneakyThrows
+
+    @SneakyThrows
     public void printMyId(String id) {
         if (controller.getClass().equals(StartController.class)) {
-            Platform.runLater(() ->((StartController)controller).getIdLabel().setText("My id: " + id));
+            Platform.runLater(() -> ((StartController) controller).getIdLabel().setText("My id: " + id));
         }
     }
 
     public void askNewGame(Message message) {
-        ((StartController)controller).invitePlayer(message);
+        ((StartController) controller).invitePlayer(message);
     }
 
     public void offerResponseRead(Message message) {
-        if (message.getList().getLast().equals(false)){
+        if (message.getList().getLast().equals(false)) {
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.initModality(Modality.APPLICATION_MODAL);
@@ -66,7 +70,7 @@ public class ClientController {
             });
         } else if (message.getList().getLast().equals(true)) {
             log.info("PLAYYYYYES");
-            ((StartController)controller).gameBegining(message);
+            ((StartController) controller).gameBegining(message);
         }
     }
 
@@ -82,14 +86,31 @@ public class ClientController {
     }
 
     public void moveCommand() {
-        Platform.runLater(() -> ((MainController)controller).getInfo().setText("You're moving"));
+        Platform.runLater(() -> ((MainController) controller).getInfo().setText("You're moving"));
 //        Arrays.stream(((MainController)controller)//убираем действия с наших кнопок
 //                .getMyMainField()
 //                .getButtonExtendeds())
 //                .forEach(row -> Arrays.stream(row)
 //                        .forEach(buttonExtended -> buttonExtended.getButton().setOnAction(event -> {})));
     }
+
     public void waitCommand() {
-        Platform.runLater(() -> ((MainController)controller).getInfo().setText("Waiting for opponent's move"));
+        Platform.runLater(() -> ((MainController) controller).getInfo().setText("Waiting for opponent's move"));
+    }
+
+    public void shotRequestHandler(Message message) {
+        Integer shotX, shotY;
+        shotX = (Integer) message.getList().getFirst();
+        shotY = (Integer) message.getList().getLast();
+//        ((MainController)controller).getMyMainField().setHit(shotX, shotY);
+        controller.getClient()
+                .sendShootResponse(message, ((MainController) controller).getMyMainField().setHit(shotX, shotY));
+    }
+
+    public void shotResponseHandler(Message message) {
+        Integer x = (Integer)message.getList().getFirst();
+        Integer y = (Integer)message.getList().get(1);
+        Integer status = (Integer) message.getList().getLast();
+        ((MainController)controller).getEnemyMainField().shotResponseHandler(x,y,status);
     }
 }

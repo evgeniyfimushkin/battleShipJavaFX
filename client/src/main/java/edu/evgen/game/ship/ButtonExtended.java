@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.function.Consumer;
 
 @Data
@@ -27,12 +28,5 @@ public class ButtonExtended {
         this.fieldType = fieldType;
         this.activated = false;
         this.hited = false;
-    }
-    public void setShot(){
-        button.setText("*");
-    }
-    private void setOnActionEnemyField(ActionEvent event) {
-        setShot();
-        System.out.println(x + " " + y + "en");
     }
 }

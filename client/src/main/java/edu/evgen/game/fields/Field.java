@@ -33,6 +33,7 @@ public abstract class Field {
         Integer x = buttonExtended.getX();
         Integer y = buttonExtended.getY();
         buttonExtendeds[x][y] = buttonExtended;
+        log.info("buttonExtendeds[{}][{}] = {}", x,y, buttonExtendeds[x][y]);
     }
 
 }

@@ -1,5 +1,6 @@
 package edu.evgen.client;
 
+import edu.evgen.game.ship.ButtonExtended;
 import javafx.scene.control.Alert;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import static edu.evgen.client.MessageMarker.*;
 
@@ -74,10 +77,10 @@ public class Client implements Closeable {
                     clientController.waitCommand();
                     break;
                 case SHOTREQUEST:
-
+                    clientController.shotRequestHandler(message);
                     break;
                 case SHOTRESPONSE:
-
+                    clientController.shotResponseHandler(message);
                     break;
                 case WIN:
 
@@ -155,16 +158,33 @@ public class Client implements Closeable {
             outputStream.writeObject(message);
         }
     }
+
     @SneakyThrows
     public void sendNotEmptyMessage(Message message) {
-            log.info("{}", message.getMarker());
-            ObjectOutputStream outputStream;
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
-            outputStream.writeObject(message);
+        log.info("{}", message.getMarker());
+        ObjectOutputStream outputStream;
+        outputStream = new ObjectOutputStream(socket.getOutputStream());
+        outputStream.writeObject(message);
 
     }
 
     public void ready() {
-        sendEmptyMessage(READY,opponent);
+        sendEmptyMessage(READY, opponent);
+    }
+
+    public void sendShootRequest(ButtonExtended buttonExtended) {
+        List<Integer> list = new ArrayList<>();
+        list.add(buttonExtended.getX());
+        list.add(buttonExtended.getY());
+        Message message = new Message(SHOTREQUEST, id, opponent, list);
+        sendNotEmptyMessage(message);
+    }
+
+    public void sendShootResponse(Message message, Integer isHitted) {
+        List<Integer> list = new ArrayList<>();
+        list.add((Integer) message.getList().getFirst());
+        list.add((Integer) message.getList().getLast());
+        list.add(isHitted);
+        sendNotEmptyMessage(new Message(SHOTRESPONSE, message.getRecipient(), message.getSender(), list));
     }
 }
