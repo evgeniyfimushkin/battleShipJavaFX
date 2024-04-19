@@ -19,6 +19,7 @@ import static edu.evgen.client.MessageMarker.*;
 public class Client implements Closeable {
 
     private final Socket socket;
+    private MessageMarker status;
     public String id;
     private String opponent;
     private Thread listener = new Thread(this::listen);
@@ -54,6 +55,7 @@ public class Client implements Closeable {
             if (message == null) {
                 continue;
             }
+            status = message.getMarker();
 
             switch (message.getMarker()) {
                 case SESSIONS:

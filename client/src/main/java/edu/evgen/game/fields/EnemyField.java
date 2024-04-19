@@ -1,5 +1,6 @@
 package edu.evgen.game.fields;
 
+import edu.evgen.client.MessageMarker;
 import edu.evgen.controllers.MainController;
 import edu.evgen.game.ship.ButtonExtended;
 import edu.evgen.game.Shot;
@@ -11,6 +12,8 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static edu.evgen.client.MessageMarker.*;
 
 @Data
 public class EnemyField extends Field {
@@ -38,6 +41,8 @@ public class EnemyField extends Field {
     }
 
     public void buttonEnemyEnemy(ButtonExtended buttonExtended) {
-        buttonShootAction(buttonExtended);
+        switch (controller.getClient().getStatus()) {
+            case MOVE -> buttonShootAction(buttonExtended);
+        }
     }
 }
