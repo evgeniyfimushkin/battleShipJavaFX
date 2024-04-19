@@ -4,8 +4,11 @@ import edu.evgen.game.fields.EnemyField;
 import edu.evgen.game.fields.FieldType;
 import edu.evgen.game.fields.MyField;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import lombok.Data;
+
+import java.util.function.Consumer;
 
 @Data
 public class ButtonExtended {

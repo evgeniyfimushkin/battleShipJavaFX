@@ -404,6 +404,8 @@ public class MyField extends Field {
                             && (ships.stream().filter(ship -> ship.getSize() == 4).count() == 1)
             ) {
                 controller.getClient().ready();
+                controller.getReadyButton().setDisable(true);
+                controller.getInfo().setText("Waiting for opponent");
             } else {
                 alert("Bad ships");
             }

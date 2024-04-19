@@ -64,10 +64,10 @@ public class Client implements Closeable {
                     clientController.oponentIsReady(message);
                     break;
                 case MOVE:
-
+                    clientController.moveCommand();
                     break;
                 case WAIT:
-
+                    clientController.waitCommand();
                     break;
                 case SHOTREQUEST:
 

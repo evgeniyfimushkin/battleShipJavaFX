@@ -8,6 +8,7 @@ import edu.evgen.game.fields.FieldType;
 import edu.evgen.game.fields.MyField;
 import edu.evgen.game.ship.ButtonExtended;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,24 +24,25 @@ public class MainController extends AbstractController {
     @FXML
     Button readyButton, clearButton;
     @FXML
-    public Label countShips, warnings;
+    public Label countShips, warnings, info;
     private ClientController clientController;
     private Client client;
     MyField myMainField;
-//    EnemyField enemyField;
+    EnemyField enemyMainField;
 
     @FXML
     private void initialize() {
 //        enemyField = new EnemyField();
         myMainField = new MyField(this);
+        enemyMainField = new EnemyField(this);
         clearButton.setOnAction(myMainField::clear);
         readyButton.setOnAction(myMainField::ready);
-        fillGridPane(myField, 10, 10, FieldType.MY_FIELD);
-        fillGridPane(enemyField, 10, 10, FieldType.ENEMY_FIELD);
+        fillGridPane(myField, 10, 10, FieldType.MY_FIELD,myMainField);
+        fillGridPane(enemyField, 10, 10, FieldType.ENEMY_FIELD,enemyMainField);
     }
 
     //Создание кнопок в GridPane
-    public static void fillGridPane(GridPane gridPane, int width, int height, FieldType type) {
+    public static void fillGridPane(GridPane gridPane, int width, int height, FieldType type, Field field) {
         gridPane.getChildren().clear(); // Очищаем GridPane перед заполнением
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
@@ -50,7 +52,7 @@ public class MainController extends AbstractController {
                 GridPane.setFillWidth(button, true); // Разрешаем кнопке заполнять всю доступную ширину ячейки
                 button.setStyle(" -fx-background-radius: 0;");
                 gridPane.add(button, col, row); // Добавляем кнопку в GridPane
-                new ButtonExtended(button, col, row, type);
+                ButtonExtended buttonExtended = new ButtonExtended(button, col, row, type);
             }
         }
     }
