@@ -54,6 +54,9 @@ public class MainController extends AbstractController {
                 if (field.getClass().equals(MyField.class)){
                     buttonExtended.getButton().setOnAction(event -> myMainField.buttonCreateShipsAction(buttonExtended));
                     myMainField.buttonExtendedsAdd(buttonExtended);
+                }else if (field.getClass().equals(EnemyField.class)) {
+                    enemyMainField.buttonExtendedsAdd(buttonExtended);
+                    buttonExtended.getButton().setOnAction(event -> enemyMainField.buttonEnemyEnemy(buttonExtended));
                 }
             }
         }
