@@ -1,6 +1,7 @@
 package edu.evgen;
 
 import edu.evgen.client.Message;
+import edu.evgen.client.MessageMarker;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.Synchronized;
@@ -70,6 +71,15 @@ public class Session implements Closeable {
     }
 
     @SneakyThrows
+    public void sendMarkerMessage(Message message){
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        List<String> list = new ArrayList<>();
+        list.add(getId());
+        objectOutputStream.writeObject(message);
+        objectOutputStream.flush();
+    }
+
+    @SneakyThrows
     public void listen() {
         try {
             while (true) {
@@ -87,6 +97,10 @@ public class Session implements Closeable {
                     case SESSIONS:
                         log.info("getSessionsRequest");
                         server.sendSessions(this);
+                        break;
+                    case READY:
+                        transport(message);
+                        server.newGame(this);
                         break;
                     case SHOTREQUEST:
                         transport(message);

@@ -19,6 +19,7 @@ public class Client implements Closeable {
 
     private final Socket socket;
     public String id;
+    private String opponent;
     private Thread listener = new Thread(this::listen);
     private ClientController clientController;
     private String address;
@@ -58,6 +59,9 @@ public class Client implements Closeable {
                     break;
                 case SETID:
                     getIdFromServer(message);
+                    break;
+                case READY:
+                    clientController.oponentIsReady(message);
                     break;
                 case MOVE:
 
@@ -157,6 +161,6 @@ public class Client implements Closeable {
     }
 
     public void ready() {
-        sendEmptyMessage(READY,id);
+        sendEmptyMessage(READY,opponent);
     }
 }

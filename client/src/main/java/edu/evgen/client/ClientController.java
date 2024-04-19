@@ -68,4 +68,15 @@ public class ClientController {
             ((StartController)controller).gameBegining(message);
         }
     }
+
+    public void oponentIsReady(Message message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.setTitle("Notification");
+            alert.setHeaderText(null);
+            alert.setContentText("OPPONENT IS READY!");
+            alert.showAndWait();
+        });
+    }
 }

@@ -96,6 +96,7 @@ public class StartController extends AbstractController {
     }
 
     public void gameBegining(Message message) {
+        client.setOpponent(message.getSender());
         client.sendNotEmptyMessage(new Message(MessageMarker.STARTGAMING,message.getSender(), message.getRecipient(), null));
         Platform.runLater(() -> {
             try {
