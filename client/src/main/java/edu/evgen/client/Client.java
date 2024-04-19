@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -25,7 +26,7 @@ public class Client implements Closeable {
     private String address;
 
 
-    public Client(String address, Integer port, ClientController clientController) {
+    public Client(String address, Integer port, ClientController clientController) throws IOException {
         Socket socket1;
         this.clientController = clientController;
         try {
@@ -34,6 +35,7 @@ public class Client implements Closeable {
         } catch (Throwable e) {
             socket1 = null;
             info(String.format("Failed connection %s:%d", address, port));
+            throw e;
         }
         this.socket = socket1;
         listener.start();
