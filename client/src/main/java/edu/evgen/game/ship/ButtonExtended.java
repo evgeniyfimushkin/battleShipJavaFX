@@ -27,14 +27,6 @@ public class ButtonExtended {
         this.fieldType = fieldType;
         this.activated = false;
         this.hited = false;
-        this.setOnAction();
-    }
-
-    private void setOnAction() {
-        switch (fieldType) {
-            case MY_FIELD -> myField.buttonExtendedRegister(this);
-            case ENEMY_FIELD -> EnemyField.buttonExtendedRegister(this);
-        }
     }
     public void setShot(){
         button.setText("*");

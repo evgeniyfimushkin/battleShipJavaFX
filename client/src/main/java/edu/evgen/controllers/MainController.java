@@ -7,8 +7,6 @@ import edu.evgen.game.fields.Field;
 import edu.evgen.game.fields.FieldType;
 import edu.evgen.game.fields.MyField;
 import edu.evgen.game.ship.ButtonExtended;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -42,7 +40,7 @@ public class MainController extends AbstractController {
     }
 
     //Создание кнопок в GridPane
-    public static void fillGridPane(GridPane gridPane, int width, int height, FieldType type, Field field) {
+    public void fillGridPane(GridPane gridPane, int width, int height, FieldType type, Field field) {
         gridPane.getChildren().clear(); // Очищаем GridPane перед заполнением
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
@@ -53,6 +51,10 @@ public class MainController extends AbstractController {
                 button.setStyle(" -fx-background-radius: 0;");
                 gridPane.add(button, col, row); // Добавляем кнопку в GridPane
                 ButtonExtended buttonExtended = new ButtonExtended(button, col, row, type);
+                if (field.getClass().equals(MyField.class)){
+                    buttonExtended.getButton().setOnAction(event -> myMainField.buttonCreateShipsAction(buttonExtended));
+                    myMainField.buttonExtendedsAdd(buttonExtended);
+                }
             }
         }
     }

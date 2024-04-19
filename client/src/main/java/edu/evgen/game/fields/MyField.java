@@ -1,6 +1,5 @@
 package edu.evgen.game.fields;
 
-import edu.evgen.client.MessageMarker;
 import edu.evgen.controllers.MainController;
 import edu.evgen.game.Shot;
 import edu.evgen.game.ship.ButtonExtended;
@@ -14,14 +13,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import static edu.evgen.client.MessageMarker.*;
-
 @Data
 public class MyField extends Field {
     @Getter
     private ArrayList<Ship> ships = new ArrayList<>();
     private ArrayList<Shot> shots = new ArrayList<>();
-    private ButtonExtended[][] buttonExtendeds = new ButtonExtended[10][10];
     private MainController controller;
 
     public MyField(MainController controller) {
@@ -30,18 +26,8 @@ public class MyField extends Field {
         ButtonExtended.myField = this;
     }
 
-    public void buttonExtendedRegister(ButtonExtended buttonExtended) {
-        buttonExtended.getButton().setOnAction(event -> buttonAction(buttonExtended));
-        buttonExtendedsAdd(buttonExtended);
-    }
 
-    private void buttonExtendedsAdd(ButtonExtended buttonExtended) {
-        Integer x = buttonExtended.getX();
-        Integer y = buttonExtended.getY();
-        buttonExtendeds[x][y] = buttonExtended;
-    }
-
-    private void buttonAction(ButtonExtended buttonExtended) {
+    public void buttonCreateShipsAction(ButtonExtended buttonExtended) {
         if (buttonExtended.getActivated()) {
             cutShip(buttonExtended);
         } else {
@@ -406,6 +392,7 @@ public class MyField extends Field {
                 controller.getClient().ready();
                 controller.getReadyButton().setDisable(true);
                 controller.getInfo().setText("Waiting for opponent");
+                setAllButtonsAction(empty -> {});
             } else {
                 alert("Bad ships");
             }
