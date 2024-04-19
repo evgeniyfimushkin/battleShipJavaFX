@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -112,5 +113,16 @@ public class ClientController {
         Integer y = (Integer)message.getList().get(1);
         Integer status = (Integer) message.getList().getLast();
         ((MainController)controller).getEnemyMainField().shotResponseHandler(x,y,status);
+    }
+
+    public void winHandler(Message message) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("You Win! Want to play again?");
+            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+            ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+        });
     }
 }

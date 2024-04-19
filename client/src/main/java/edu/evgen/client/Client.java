@@ -58,7 +58,6 @@ public class Client implements Closeable {
             if (message == null) {
                 continue;
             }
-            status = message.getMarker();
 
             switch (message.getMarker()) {
                 case SESSIONS:
@@ -68,12 +67,15 @@ public class Client implements Closeable {
                     getIdFromServer(message);
                     break;
                 case READY:
+                    status = message.getMarker();
                     clientController.oponentIsReady(message);
                     break;
                 case MOVE:
+                    status = message.getMarker();
                     clientController.moveCommand();
                     break;
                 case WAIT:
+                    status = message.getMarker();
                     clientController.waitCommand();
                     break;
                 case SHOTREQUEST:
@@ -82,9 +84,6 @@ public class Client implements Closeable {
                 case SHOTRESPONSE:
                     clientController.shotResponseHandler(message);
                     break;
-                case WIN:
-
-                    break;
                 case OFFERREQUEST:
                     clientController.askNewGame(message);
                     break;
@@ -92,7 +91,8 @@ public class Client implements Closeable {
                     clientController.offerResponseRead(message);
                     break;
                 case ENDGAME:
-
+                    status = message.getMarker();
+                    clientController.winHandler(message);
                     break;
                 case STARTGAMING:
 
@@ -186,5 +186,10 @@ public class Client implements Closeable {
         list.add((Integer) message.getList().getLast());
         list.add(isHitted);
         sendNotEmptyMessage(new Message(SHOTRESPONSE, id, message.getSender(), list));
+    }
+
+    public void sendEndGameMessage() {
+        status = ENDGAME;
+        sendEmptyMessage(ENDGAME,opponent);
     }
 }

@@ -6,6 +6,8 @@ import edu.evgen.game.ship.ButtonExtended;
 import edu.evgen.game.ship.Ship;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import lombok.Data;
 import lombok.Getter;
 
@@ -387,8 +389,8 @@ public class MyField extends Field {
     public Boolean getHit(Ship ship) {
         if (ship.getButtonExtendeds().stream().filter(buttonExtended -> (buttonExtended.getHited() == true)).count() == ship.getSize()) {
 //            Platform.runLater(() -> {
-                ship.getButtonExtendeds().forEach(buttonExtended -> buttonExtended.getButton().setDisable(true));
-                this.killShip(ship);
+            ship.getButtonExtendeds().forEach(buttonExtended -> buttonExtended.getButton().setDisable(true));
+            this.killShip(ship);
 //            });
             return true;
         }
@@ -399,6 +401,18 @@ public class MyField extends Field {
     public void killShip(Ship ship) {
         ships.remove(ship);
         Platform.runLater(() -> controller.countShips.setText(ships.size() + "/10 ships"));
+        if (ships.size() == 0) {
+            controller.getClient().sendEndGameMessage();
+            Platform.runLater(()->{
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("You Lose! Want to play again?");
+            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+            ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+
+            });
+        }
     }
 
     public void ready(ActionEvent event) {
