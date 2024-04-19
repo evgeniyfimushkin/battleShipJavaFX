@@ -55,7 +55,6 @@ public class EnemyField extends Field {
                     break;
                 case 2://уничтожил
                     log.info("Killed");
-                    log.info("Hitted");
 
                     button.setText("x");
                     button.setStyle(" -fx-background-radius: 0; -fx-background-color: #7B001C");

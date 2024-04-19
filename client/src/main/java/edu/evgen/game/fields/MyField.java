@@ -348,6 +348,7 @@ public class MyField extends Field {
 
             });
             Ship hittedShip = ships.stream().filter(ship -> ship.getButtonExtendeds().contains(buttonExtendeds[x][y])).toList().getLast();
+            buttonExtendeds[x][y].setHited(true);
             if (getHit(hittedShip))
                 return 2;
             else
@@ -385,10 +386,10 @@ public class MyField extends Field {
     //обработка попадания
     public Boolean getHit(Ship ship) {
         if (ship.getButtonExtendeds().stream().filter(buttonExtended -> (buttonExtended.getHited() == true)).count() == ship.getSize()) {
-            Platform.runLater(() -> {
+//            Platform.runLater(() -> {
                 ship.getButtonExtendeds().forEach(buttonExtended -> buttonExtended.getButton().setDisable(true));
                 this.killShip(ship);
-            });
+//            });
             return true;
         }
         return false;
