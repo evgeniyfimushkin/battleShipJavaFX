@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Slf4j
@@ -43,12 +44,16 @@ public class StartController extends AbstractController {
         client.getSessionsRequest();
     }
 
-    public void setClient(Client client){
+    public void setClient(Client client) {
         this.client = client;
+
+
+        client.setStatus(MessageMarker.LOBBY);
         client.setClientController(new ClientController(this));
     }
+
     private void playTry(ActionEvent event) {
-        client.sendEmptyMessage(MessageMarker.OFFERREQUEST,clientIdTextField.getText());
+        client.sendEmptyMessage(MessageMarker.OFFERREQUEST, clientIdTextField.getText());
     }
 
     public void invitePlayer(Message message) {
@@ -84,20 +89,20 @@ public class StartController extends AbstractController {
     private void acceptInvitation(Message message) {
         List<Boolean> list = new LinkedList<>();
         list.add(true);
-        client.sendNotEmptyMessage(new Message(MessageMarker.OFFERRESPONSE,client.id,message.getSender(),list));
+        client.sendNotEmptyMessage(new Message(MessageMarker.OFFERRESPONSE, client.id, message.getSender(), list));
         // Ваш код для принятия приглашения
     }
 
     private void declineInvitation(Message message) {
         List<Boolean> list = new LinkedList<>();
         list.add(false);
-        client.sendNotEmptyMessage(new Message(MessageMarker.OFFERRESPONSE,client.id,message.getSender(),list));
+        client.sendNotEmptyMessage(new Message(MessageMarker.OFFERRESPONSE, client.id, message.getSender(), list));
         // Ваш код для принятия приглашения
     }
 
     public void gameBegining(Message message) {
         client.setOpponent(message.getSender());
-        client.sendNotEmptyMessage(new Message(MessageMarker.STARTGAMING,message.getSender(), message.getRecipient(), null));
+        client.sendNotEmptyMessage(new Message(MessageMarker.STARTGAMING, message.getSender(), message.getRecipient(), null));
         Platform.runLater(() -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainScene.fxml"));

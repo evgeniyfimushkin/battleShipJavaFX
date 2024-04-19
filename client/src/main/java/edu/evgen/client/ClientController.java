@@ -37,6 +37,8 @@ public class ClientController {
 
     public void refreshClients(Message message) {
         Platform.runLater(() -> {
+            if (!(controller.getClient().getId() == null))
+                controller.getClient().getClientController().printMyId(controller.getClient().getId());
             if (clients != null)
                 clients.clear();
             if (controller.getClass().equals(StartController.class)) {
@@ -125,6 +127,12 @@ public class ClientController {
             ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
             if (result == ButtonType.YES) {
                 controller.getClient().restartRequest();
+            }else if (result == ButtonType.NO){
+                Platform.runLater(() -> {
+                    ((MainController)controller).getReadyButton().setDisable(false);
+                    ((MainController)controller).getReadyButton().setText("Back To Lobby");
+                    ((MainController)controller).getReadyButton().setOnAction(((MainController)controller)::backToLobby);
+                });
             }
         });
     }

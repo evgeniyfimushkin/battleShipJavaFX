@@ -410,6 +410,12 @@ public class MyField extends Field {
                 ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
                 if (result == ButtonType.YES) {
                     controller.getClient().restartRequest();
+                }else if (result == ButtonType.NO){
+                    Platform.runLater(() -> {
+                        controller.getReadyButton().setDisable(false);
+                        controller.getReadyButton().setText("Back To Lobby");
+                        controller.getReadyButton().setOnAction(controller::backToLobby);
+                    });
                 }
             });
         }

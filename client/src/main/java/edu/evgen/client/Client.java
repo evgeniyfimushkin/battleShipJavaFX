@@ -79,15 +79,17 @@ public class Client implements Closeable {
                     clientController.waitCommand();
                     break;
                 case SHOTREQUEST:
-                    clientController.shotRequestHandler(message);
+                        clientController.shotRequestHandler(message);
                     break;
                 case SHOTRESPONSE:
-                    clientController.shotResponseHandler(message);
+                        clientController.shotResponseHandler(message);
                     break;
                 case OFFERREQUEST:
+                    if (status.equals(LOBBY))
                     clientController.askNewGame(message);
                     break;
                 case OFFERRESPONSE:
+                    if (status.equals(LOBBY))
                     clientController.offerResponseRead(message);
                     break;
                 case ENDGAME:
@@ -194,10 +196,10 @@ public class Client implements Closeable {
 
     public void sendEndGameMessage() {
         status = ENDGAME;
-        sendEmptyMessage(ENDGAME,opponent);
+        sendEmptyMessage(ENDGAME, opponent);
     }
 
     public void restartRequest() {
-        sendEmptyMessage(RESTART,opponent);
+        sendEmptyMessage(RESTART, opponent);
     }
 }

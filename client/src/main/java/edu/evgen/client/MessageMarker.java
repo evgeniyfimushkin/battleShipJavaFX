@@ -15,6 +15,7 @@ public enum MessageMarker {
     WIN("@WIN@"),
     ENDGAME("@ENDGAME@"),
     READY("@READY@"),
+    LOBBY("@LOBBY@"),
     EMPTY("@EMPTY@");//for not NPE
 
     private final String marker;
