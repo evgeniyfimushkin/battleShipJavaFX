@@ -1,14 +1,12 @@
 package edu.evgen;
 
 import edu.evgen.client.Message;
-import edu.evgen.client.MessageMarker;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -16,7 +14,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static edu.evgen.client.MessageMarker.*;
+import static edu.evgen.client.MessageMarker.SETID;
 
 @Slf4j
 @Data
@@ -40,23 +38,28 @@ public class Session implements Closeable {
     private void transport(Message message) {
         log.info("Transport with marker {}", message.getMarker());
         if (id.equals(message.getRecipient())) {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-            objectOutputStream.writeObject(message);
+            new ObjectOutputStream(socket.getOutputStream()).writeObject(message);
         } else {
-            for (Session iter : server.sessions) {
-                if (message.getRecipient().equals(iter.id))
-                    iter.transport(message);
-            }
+            server.sessions
+                    .stream()
+                    .filter(s -> s.id.equals(message.getRecipient()))
+                    .forEach(s -> s.transport(message));
         }
     }
 
     @SneakyThrows
     private void disconnect() {
-        server.ids.remove(id);
-        server.sessions.remove(this);
-        server.sessions.forEach(server::sendSessions);
+        this.close();
         run = false;
         listener.interrupt();
+    }
+
+    @Override
+    @SneakyThrows
+    public void close() {
+        server.ids.remove(this.id);
+        server.sessions.remove(this);
+        server.sessions.forEach(server::sendSessions);
         socket.close();
     }
 
@@ -84,48 +87,37 @@ public class Session implements Closeable {
         try {
             while (true) {
 
-                ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-                Message message = (Message) objectInputStream.readObject();
+                Message message = (Message) new ObjectInputStream(socket.getInputStream()).readObject();
 
                 if (message == null) {
                     continue;
                 }
 
-                log.info("{}",message.getMarker());
+                log.info("{}: {}", message.getMarker(), message);
 
                 switch (message.getMarker()) {
                     case SESSIONS:
-                        log.info("getSessionsRequest");
                         server.sendSessions(this);
                         break;
                     case READY:
                         transport(message);
                         server.newGame(this);
                         break;
-                    case SHOTREQUEST:
-                        transport(message);
-                        break;
                     case SHOTRESPONSE:
                         transport(message);
                         server.games
                                 .stream()
-                                .filter((game -> (game.getPlayer1().toString().equals(id)||game.getPlayer2().toString().equals(id))))
+                                .filter((game -> game.isMyGame(id)))
                                 .forEach(game -> game.moveChange(message.getRecipient()));
-                        break;
-                    case WIN:
-                        transport(message);
-                        break;
-                    case ENDGAME:
-                        transport(message);
                         break;
                     case STARTGAMING:
                         opponent = message.getSender();
-                        log.info("Gaming Started {} vs {}", id, opponent);
                         transport(message);
                         break;
+                    case WIN:
+                    case ENDGAME:
+                    case SHOTREQUEST:
                     case OFFERREQUEST:
-                        transport(message);
-                        break;
                     case OFFERRESPONSE:
                         transport(message);
                         break;
@@ -134,7 +126,7 @@ public class Session implements Closeable {
                         break;
                     case RESTART:
                         server.games.stream()
-                                .filter((game -> (game.getPlayer1().toString().equals(id)||game.getPlayer2().toString().equals(id))))
+                                .filter((game -> game.isMyGame(id)))
                                 .forEach(game -> game.restartRequest(message.getRecipient()));
                         break;
                     default:
@@ -146,12 +138,4 @@ public class Session implements Closeable {
         }
     }
 
-    @Override
-    @SneakyThrows
-    public void close() throws IOException {
-        server.ids.remove(this.id);
-        server.sessions.remove(this);
-        server.sessions.forEach(server::sendSessions);
-        socket.close();
-    }
 }

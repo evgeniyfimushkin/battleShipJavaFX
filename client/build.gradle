@@ -2,19 +2,12 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'java'
+    id 'org.springframework.boot' version '3.2.4'
 }
-
-group = 'edu.evgen'
-version = '0.0.1-SNAPSHOT'
 
 repositories {
     mavenLocal()
     mavenCentral()
-}
-
-
-javafx {
-    version = "17"
 }
 
 configurations {
@@ -22,6 +15,10 @@ configurations {
 		extendsFrom annotationProcessor
 	}
 }
+javafx {
+     version = "21.0.2"
+    // modules = [ 'javafx.controls' ,'javafx.fxml','javafx.graphics']
+ }
 
 dependencies {
 	compileOnly 'org.projectlombok:lombok:1.18.32'
@@ -31,12 +28,11 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.12'
         implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.12'
+
 }
 
 application {
     mainModule.set('edu.evgen')
-    mainClass.set('edu.evgen.ServerApplication')
+    mainClass.set('edu.evgen.ClientApplication')
 }
-tasks.named('test') {
-    useJUnitPlatform()
-}
+

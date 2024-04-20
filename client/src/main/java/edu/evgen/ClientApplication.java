@@ -8,6 +8,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class ClientApplication extends Application {
+    public static void main(String[] args) {
+        Application.launch();
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ConnectionScene.fxml"));

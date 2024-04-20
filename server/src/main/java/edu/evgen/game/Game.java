@@ -7,12 +7,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.function.Predicate;
+
 import static edu.evgen.client.MessageMarker.*;
 
 @Getter
 @Setter
 @Slf4j
 public class Game {
+
     Player player1, player2;
     Session player1Sesiion, player2Sesiion;
 
@@ -32,6 +35,10 @@ public class Game {
             player2.setAction(WAIT);
             move();
         }
+    }
+
+    public Boolean isMyGame(String id) {
+        return player1.toString().equals(id) || player2.toString().equals(id);
     }
 
     private void move() {

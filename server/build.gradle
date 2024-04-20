@@ -2,6 +2,7 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'java'
+    id 'org.springframework.boot' version '3.2.4'
 }
 
 group = 'edu.evgen'
